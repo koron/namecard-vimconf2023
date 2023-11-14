@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>VimConf 2023 Tiny Namecard</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+</style>
+
+<style>
+#namecard {
+  display: block;
+  width: 100mm;
+  height: 148mm;
+  margin: 0 auto;
+  background-image: url("./NameCardBG.svg");
+  position: relative;
+}
+
+#namecard .icon {
+  display: block;
+  width: 80mm;
+  height: 80mm;
+  position: absolute;
+  top: 15mm;
+  left: 10mm;
+  border-radius: 5mm;
+  border: #ffe6d5 1mm solid;
+  box-sizing: border-box;
+  background-color: #ffffffaa;
+}
+
+#namecard .icon.dragover {
+  background-color: #00800055;
+}
+
+#namecard .label {
+  display: table;
+  width: 90mm;
+  height: 25mm;
+  position: absolute;
+  left: 5mm;
+  top: 98mm;
+
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  font-size: 12mm;
+  line-height: 1em;
+
+  border: #666 1px dotted;
+}
+
+#namecard .label .letters {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#control {
+  display: block;
+  width: 100%;
+  margin-top: 1em;
+  padding: 1ex;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 0.75ex;
+  vertical-align middle;
+
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5cm;
+}
+
+#control .name {
+}
+#control label {
+  vertical-align: top;
+}
+#control textarea {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.5cm;
+}
+
+@media screen {
+  body {
+    background-color: #ccc;
+    background-image:
+      linear-gradient(45deg, rgb(230, 230, 230) 25%, transparent 0),
+      linear-gradient(45deg, transparent 75%, rgb(230, 230, 230) 0),
+      linear-gradient(45deg, rgb(230, 230, 230) 25%, transparent 0),
+      linear-gradient(45deg, transparent 75%, rgb(230, 230, 230) 0);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px, 8px 8px, 16px 16px;
+  }
+}
+
+@media print {
+  body {
+    margin: 0;
+  }
+  #namecard {
+    position: fixed;
+    top 0;
+    left 0;
+  }
+  #namecard .label {
+    border: none;
+  }
+  #control {
+    display: none;
+  }
+}
+
+</style>
+  </head>
+
+  <body>
+    <section id="namecard">
+      <img id="icon-image" class="icon" src="./monster01.png"/>
+      <div class="label">
+        <span class="letters" id="name-label">Vimmer</span>
+      </div>
+    </section>
+    <section id="control">
+      <div class="name">
+        <label>Name</label>
+        <textarea id="name-input" rows="2" cols="16">Vimmer</textarea>
+      </div>
+      <div>
+        <h3>使い方</h3>
+        <ol>
+          <li>名前を Name に入力する</li>
+          <li>アイコン部分に画像ファイルをドラッグ&amp;ドロップする</li>
+          <li>はがきサイズ(10mm x 148mm)で印刷する
+            (XPSやPDFで出力してコンビニのはがきプリント等)
+          </li>
+        </ol>
+      </div>
+      <div>
+        <h3>引用元</h3>
+        <ul>
+          <li>デフォルトアイコン: いらすとや <a href="https://www.irasutoya.com/2013/10/blog-post_5228.html">カラフルなモンスター</a></li>
+          <li>名前フォント: <a href="https://fonts.google.com/specimen/Montserrat">Montoserrat</a></li>
+        </ul>
+      </div>
+    </section>
+  </body>
+
+  <script>
+    var nameInput = document.querySelector("#name-input");
+    var nameLabel = document.querySelector("#name-label");
+    nameInput.addEventListener("input", function() {
+      nameLabel.innerText = nameInput.value;
+    });
+
+    var currBlob;
+    var iconImage = document.querySelector("#icon-image");
+    function updateIcon(blob) {
+      iconImage.src = URL.createObjectURL(blob[0]);
+    }
+    iconImage.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "copy";
+      iconImage.classList.add("dragover");
+    });
+    iconImage.addEventListener("dragleave", function(e) {
+      iconImage.classList.remove("dragover");
+    });
+    iconImage.addEventListener("drop", function(e) {
+      e.preventDefault();
+      updateIcon(e.dataTransfer.files);
+      iconImage.classList.remove("dragover");
+    });
+  </script>
+</html>
